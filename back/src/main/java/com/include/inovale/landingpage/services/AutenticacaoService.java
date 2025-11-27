@@ -58,7 +58,7 @@ public class AutenticacaoService {
         usuarioEntity.setEstadoUsuario(UsuarioEstadoEnum.PENDENTE);
 
         // DEFININDO O PAPEL PADRÃO DO USUÁRIO
-        usuarioEntity.setPapel(PapelEnum.USUARIO);
+        usuarioEntity.setPerfil(PapelEnum.USUARIO);
 
         // SALVANDO O OBJETO
         usuarioRepository.save(usuarioEntity);

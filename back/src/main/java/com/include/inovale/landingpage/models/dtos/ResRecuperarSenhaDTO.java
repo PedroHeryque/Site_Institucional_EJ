@@ -1,8 +1,6 @@
 package com.include.inovale.landingpage.models.dtos;
 
-
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,13 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ReqRegistrarUsuarioDTO {
-    @NotBlank
-    private String nome;
-
+public class ResRecuperarSenhaDTO {
     @NotBlank
     private String email;
-
-    @Size(min=4)
-    private String senha;
 }

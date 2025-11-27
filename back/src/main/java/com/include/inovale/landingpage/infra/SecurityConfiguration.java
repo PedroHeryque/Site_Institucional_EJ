@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, "/auth/entrar").permitAll()
                     .requestMatchers(HttpMethod.GET, "/auth/validar/*").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/recuperarSenha/*/gerarLink").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/recuperarSenha/gerarCodigo").permitAll()
                     .requestMatchers(HttpMethod.PATCH, "/recuperarSenha/atualizar/*").permitAll()
                     // QUALQUER ROTA DIFERENTE DAS QUE ESTÃO LISTADAS ACIMA
                     // NECESSITAM DE AUTENTICAÇÃO

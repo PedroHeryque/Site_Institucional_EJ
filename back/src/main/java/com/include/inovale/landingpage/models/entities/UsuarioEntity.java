@@ -48,7 +48,7 @@ public class UsuarioEntity implements UserDetails{
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PapelEnum papel;
+    private PapelEnum perfil;
 
     @OneToOne(
         mappedBy = "usuario",
@@ -56,12 +56,19 @@ public class UsuarioEntity implements UserDetails{
         orphanRemoval = true,
         fetch = FetchType.EAGER
     )
-    
     private UsuarioConfirmacaoEntity confirmacao;
+
+    @OneToOne(
+        mappedBy = "usuario",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.EAGER
+    )
+    private RecuperacaoSenhaEntity recuperarSenha;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.papel.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.perfil.name()));
     }
 
     @Override
