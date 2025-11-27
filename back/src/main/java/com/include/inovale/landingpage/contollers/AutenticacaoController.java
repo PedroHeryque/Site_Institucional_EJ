@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.include.inovale.landingpage.models.dtos.ReqLogarUsuarioDTO;
 import com.include.inovale.landingpage.models.dtos.ReqRegistrarUsuarioDTO;
+import com.include.inovale.landingpage.models.dtos.ResLogarUsuarioDTO;
 import com.include.inovale.landingpage.models.dtos.ResRegistrarUsuarioDTO;
 import com.include.inovale.landingpage.services.AutenticacaoService;
 import com.include.inovale.landingpage.services.UsuarioConfirmacaoService;
@@ -32,6 +34,12 @@ public class AutenticacaoController {
     @GetMapping("/validar/{codigo}")
     public ResponseEntity<ResRegistrarUsuarioDTO> validarUsuario(@PathVariable String codigo){
         ResRegistrarUsuarioDTO user = usuarioConfirmacaoService.confirmarUsuario(codigo);
+        return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping("/entrar")
+    public ResponseEntity<ResLogarUsuarioDTO> logarUsuario(@RequestBody @Validated ReqLogarUsuarioDTO dto){
+        ResLogarUsuarioDTO user = autenticacaoService.logarUsuario(dto);
         return ResponseEntity.ok().body(user);
     }
 }

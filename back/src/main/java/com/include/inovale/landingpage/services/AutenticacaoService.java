@@ -1,11 +1,16 @@
 package com.include.inovale.landingpage.services;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.include.inovale.landingpage.models.dtos.ReqLogarUsuarioDTO;
 import com.include.inovale.landingpage.models.dtos.ReqRegistrarUsuarioDTO;
+import com.include.inovale.landingpage.models.dtos.ResLogarUsuarioDTO;
 import com.include.inovale.landingpage.models.dtos.ResRegistrarUsuarioDTO;
 import com.include.inovale.landingpage.models.entities.UsuarioEntity;
 import com.include.inovale.landingpage.models.enums.PapelEnum;
@@ -19,8 +24,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class AutenticacaoService {
     private final UsuarioConfirmacaoService usuarioConfirmacaoService;
+    private final AuthenticationManager authenticationManager;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final TokenService tokenService;
     
     
     public ResRegistrarUsuarioDTO registrarUsuario(ReqRegistrarUsuarioDTO usuarioDTO){
@@ -60,5 +67,39 @@ public class AutenticacaoService {
         
         // RETORNANDO O USUÁRIO CRIADO
         return usuarioMapper.entityToResRegistrarUsuarioDTO(usuarioEntity);
+    }
+
+    public ResLogarUsuarioDTO logarUsuario(ReqLogarUsuarioDTO usuarioDTO){
+        UsuarioEntity usuario = (UsuarioEntity) usuarioRepository.findByEmail(usuarioDTO.getEmail());
+
+        if (usuario == null) throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Usuário inexistente!"
+        );
+
+        if (usuario.getEstadoUsuario() == UsuarioEstadoEnum.INATIVO) throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Usuário banido!"
+        );
+
+        if (usuario.getEstadoUsuario() != UsuarioEstadoEnum.ATIVO) throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "O usuário não possui registro ativo na plataforma!"
+        );
+
+        UsernamePasswordAuthenticationToken usernamePassword;
+        usernamePassword = new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(), usuarioDTO.getSenha());
+
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
+
+        String token = tokenService.gerarToken((UsuarioEntity) auth.getPrincipal());
+        
+        ResLogarUsuarioDTO loginRes = new ResLogarUsuarioDTO();
+        loginRes.setId(usuario.getId());
+        loginRes.setEmail(usuario.getEmail());
+        loginRes.setNome(usuario.getNome());
+        loginRes.setToken(token);
+
+        return loginRes;
     }
 }
