@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.UUID; 
 
 import org.springframework.stereotype.Service;
+
+import com.include.inovale.landingpage.models.dtos.ContatoDTO;
 import com.include.inovale.landingpage.models.entities.ContatoEntity;
+import com.include.inovale.landingpage.models.mappers.ContatoMapper;
 import com.include.inovale.landingpage.models.repositories.ContatoRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,10 +17,12 @@ import lombok.RequiredArgsConstructor;
 public class ContatoService {
 
     private final ContatoRepository repository;
+    private final ContatoMapper contatoMapper;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     // metodo de salvamentento nao mudou.
-    public ContatoEntity salvarMensagem(ContatoEntity contato) {
+    public ContatoEntity salvarMensagem(ContatoDTO dto) {
+        ContatoEntity contato = contatoMapper.toEntity(dto);
         contato.setDataEnvio(LocalDateTime.now());
         contato.setLido(false);
         return repository.save(contato);
@@ -29,8 +34,21 @@ public class ContatoService {
     }
 
     // MUDANÇA AQUI: Recebe UUID em vez de Long
-    public void deletar(UUID id) { 
+    public void deletar(UUID id) {
         usuarioAutenticadoService.verificaPapelAdmin();
+
         repository.deleteById(id); 
+    }
+
+    public ContatoEntity marcarComoLido(UUID id) { 
+        usuarioAutenticadoService.verificaPapelAdmin();
+
+        ContatoEntity contato = repository.getReferenceById(id);
+        if (contato.isLido() == true) return contato;
+
+        contato.setLido(true);
+        repository.save(contato);
+
+        return contato;
     }
 }
