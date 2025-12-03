@@ -5,15 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.UUID; 
-
 @Getter
 @Setter
-public class ContatoDTO {
-
-    private UUID id; 
-
+public class ReqContatoDTO {
     @NotBlank
     private String nome;
 
@@ -24,7 +18,4 @@ public class ContatoDTO {
 
     @NotBlank
     private String mensagem;
-    
-    private LocalDateTime dataEnvio = LocalDateTime.now();
-    private boolean lido = false;
 }

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.include.inovale.landingpage.models.dtos.ContatoDTO;
+import com.include.inovale.landingpage.models.dtos.ReqContatoDTO;
 import com.include.inovale.landingpage.models.entities.ContatoEntity;
 import com.include.inovale.landingpage.models.mappers.ContatoMapper;
 import com.include.inovale.landingpage.models.repositories.ContatoRepository;
@@ -21,7 +21,7 @@ public class ContatoService {
     private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     // metodo de salvamentento nao mudou.
-    public ContatoEntity salvarMensagem(ContatoDTO dto) {
+    public ContatoEntity salvarMensagem(ReqContatoDTO dto) {
         ContatoEntity contato = contatoMapper.toEntity(dto);
         contato.setDataEnvio(LocalDateTime.now());
         contato.setLido(false);
@@ -50,5 +50,11 @@ public class ContatoService {
         repository.save(contato);
 
         return contato;
+    }
+
+    public void apagar(UUID id) { 
+        usuarioAutenticadoService.verificaPapelAdmin();
+        
+        repository.deleteById(id);
     }
 }
