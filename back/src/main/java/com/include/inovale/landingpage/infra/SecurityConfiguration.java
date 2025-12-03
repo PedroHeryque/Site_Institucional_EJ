@@ -32,6 +32,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // ROTAS PUBLICAS
                 .authorizeHttpRequests(authorize -> authorize
+                        // Permite que qualquer um veja os Cases de Sucesso (GET)
+                        .requestMatchers(HttpMethod.GET, "/cases").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cases/*").permitAll()
                         // --- DOCUMENTAÇÃO (SWAGGER) ---
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
