@@ -19,5 +19,4 @@ COPY --from=build /app/target/landingpage-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
-# Forçar IPv4. 
 ENTRYPOINT [ "java", "-Djava.net.preferIPv4Stack=true", "-jar", "app.jar" ]
